@@ -19,6 +19,10 @@ linksGehen = [pygame.image.load("Grafiken/links1.png"), pygame.image.load("Grafi
               pygame.image.load("Grafiken/links5.png"), pygame.image.load("Grafiken/links6.png"),
               pygame.image.load("Grafiken/links7.png"), pygame.image.load("Grafiken/links8.png")]
 sprungSound = pygame.mixer.Sound("Sounds/sprung.wav")
+siegSound = pygame.mixer.Sound("Sounds/robosieg.wav")
+verlorenSound = pygame.mixer.Sound("Sounds/robotod.wav")
+siegBild = pygame.image.load("Grafiken/sieg.png")
+verlorenBild = pygame.image.load("Grafiken/verloren.png")
 
 
 class spieler:
@@ -199,6 +203,10 @@ def zeichnen():
     spieler1.spZeichnen()
     zombie1.zZeichnen()
     zombie1.herzen()
+    if gewonnen:
+        screen.blit(siegBild, (0, 0))
+    elif verloren:
+        screen.blit(verlorenBild, (0, 0))
     pygame.display.update()
 
 
@@ -212,20 +220,33 @@ def kugelHandler():
 
 
 def Kollision():
-    global kugeln
+    global kugeln, verloren, gewonnen, go
     zombieRechteck = pygame.Rect(zombie1.x + 18, zombie1.y + 24, zombie1.breite - 36, zombie1.hoehe - 24)
+    spielerRechteck = pygame.Rect(spieler1.x + 18, spieler1.y + 36, spieler1.breite - 36, spieler1.hoehe - 36)
 
     for k in kugeln:
         kugelRechteck = pygame.Rect(k.x - k.radius, k.y - k.radius, k.radius * 2, k.radius * 2)
         if zombieRechteck.colliderect(kugelRechteck):
             kugeln.remove(k)
             zombie1.leben -= 1
+            if zombie1.leben <= 0 and not verloren:
+                gewonnen = True
+                pygame.mixer.Sound.play(siegSound)
+                go = False
+
+    if zombieRechteck.colliderect(spielerRechteck):
+        verloren = True
+        gewonnen = False
+        pygame.mixer.Sound.play(verlorenSound)
+        go = False
 
 
 linkeWand = pygame.draw.rect(screen, (0, 0, 0), (-2, 0, 2, 600), 0)
 rechteWand = pygame.draw.rect(screen, (0, 0, 0), (1201, 0, 2, 600), 0)
-spieler1 = spieler(300, 393, 5, 96, 128, -16, [0, 0, 1, 0], 0, 0)
-zombie1 = zombie(600, 393, 4, 96, 128, [0, 0], 40, 1090)
+spieler1 = spieler(300, 393, 4, 96, 128, -16, [0, 0, 1, 0], 0, 0)
+zombie1 = zombie(600, 393, 5, 96, 128, [0, 0], 40, 1090)
+verloren = False
+gewonnen = False
 kugeln = []
 go = True
 while go:
@@ -247,7 +268,7 @@ while go:
     spieler1.springen()
 
     if gedrueckt[pygame.K_SPACE]:
-        if len(kugeln) <= 4 and spieler1.ok:
+        if len(kugeln) <= 0 and spieler1.ok:
             kugeln.append(kugel(round(spieler1.x), round(spieler1.y), spieler1.last, 8, (0, 0, 0), 7))
         spieler1.ok = False
 
@@ -260,3 +281,8 @@ while go:
     Kollision()
     zeichnen()
     clock.tick(60)
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT: sys.exit()
+    zeichnen()

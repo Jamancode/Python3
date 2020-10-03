@@ -2,24 +2,13 @@ import pygame
 import sys
 
 pygame.init()              #wichtig um pygame starten zukönnen, initalisierung.
-hintergrund = pygame.image.load("Grafiken/hintergrund.png")
-screen = pygame.display.set_mode([1200,595]) # groeße des Spielbildschirms.
+screen = pygame.display.set_mode([600,600]) # groeße des Spielbildschirms.
 clock = pygame.time.Clock()           # Zeit muss immer an leigen.
-pygame.display.set_caption("Robo gegen Zombie")
-
-
-def zeichnen():
-    screen.blit(hintergrund, (0,0))
-    pygame.draw.rect(screen, (255,255,0), (x,y,breite,hoehe))     
-    pygame.display.update()  
-
-
 x = 300
 y = 300
 geschw = 3
 breite = 40
 hoehe = 80
-
 
 go = True
 while go:
@@ -30,14 +19,12 @@ while go:
     if gedrueckt[pygame.K_UP]:
         y -= geschw
     if gedrueckt[pygame.K_RIGHT]:
-        x += geschw    
+        x += geschw
     if gedrueckt[pygame.K_DOWN]:
         y += geschw
     if gedrueckt[pygame.K_LEFT]:
-        x -= geschw   
-
-
-
-    zeichnen()
-
+        x -= geschw
+      #        Oberfläche   Farbe        Bereich
+    pygame.draw.rect(screen, (255,255,0), (x,y,breite,hoehe))
+    pygame.display.update()  #Bild checken
     clock.tick(60) #fps
