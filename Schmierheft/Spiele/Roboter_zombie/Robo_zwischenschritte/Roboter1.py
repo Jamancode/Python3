@@ -19,12 +19,12 @@ while go:
     if gedrueckt[pygame.K_UP]:
         y -= geschw
     if gedrueckt[pygame.K_RIGHT]:
-        x += geschw    
+        x += geschw
     if gedrueckt[pygame.K_DOWN]:
         y += geschw
     if gedrueckt[pygame.K_LEFT]:
-        x -= geschw   
+        x -= geschw
       #        Oberfläche   Farbe        Bereich
-    pygame.draw.rect(screen, (255,255,0), (x,y,breite,hoehe))     
-    pygame.display.update()  #Bild checken  
+    pygame.draw.rect(screen, (255,255,0), (x,y,breite,hoehe))
+    pygame.display.update()  #Bild checken
     clock.tick(60) #fps
