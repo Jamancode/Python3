@@ -27,7 +27,7 @@ class klassen:
 		value = 0 
 		for student in self.studenten:
 			value += student.get_grade()
-		 return value / len(self.studenten)
+		return value / len(self.studenten)
 
 
 s1 = student("tim", 19, 95)
